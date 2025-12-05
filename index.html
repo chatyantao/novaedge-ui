@@ -2,387 +2,699 @@
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8" />
-  <title>试用系统测试面板</title>
+  <title>NovaEdge Sora 服务控制台</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>
+    :root {
+      --bg: #050816;
+      --bg-card: #0b1020;
+      --accent: #4f46e5;
+      --accent-soft: rgba(79, 70, 229, 0.15);
+      --danger: #ef4444;
+      --text-main: #e5e7eb;
+      --text-sub: #9ca3af;
+      --border: #1f2937;
+      --success: #22c55e;
+      --radius-xl: 18px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
     body {
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      background: #0f172a;
-      color: #e5e7eb;
       margin: 0;
-      padding: 20px;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: radial-gradient(circle at top, #111827 0, #020617 45%, #000 100%);
+      color: var(--text-main);
+      min-height: 100vh;
     }
-    .container {
-      max-width: 900px;
+
+    .page {
+      max-width: 1100px;
       margin: 0 auto;
+      padding: 24px 16px 48px;
     }
-    h1 {
-      font-size: 24px;
-      margin-bottom: 10px;
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 24px;
+      gap: 12px;
     }
-    h2 {
-      font-size: 18px;
-      margin-top: 24px;
-      margin-bottom: 8px;
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
     }
-    .card {
-      background: #020617;
-      border: 1px solid #1f2937;
+
+    .logo-mark {
+      width: 32px;
+      height: 32px;
       border-radius: 12px;
-      padding: 16px 20px;
-      margin-bottom: 16px;
-      box-shadow: 0 10px 25px rgba(15,23,42,0.7);
+      background: radial-gradient(circle at 20% 20%, #a855f7, #3b82f6);
+      box-shadow: 0 0 30px rgba(56, 189, 248, 0.6);
     }
+
+    .logo-text-main {
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      font-size: 18px;
+    }
+
+    .logo-text-sub {
+      font-size: 12px;
+      color: var(--text-sub);
+    }
+
+    .env-pill {
+      font-size: 11px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: rgba(15, 23, 42, 0.9);
+      color: var(--text-sub);
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.1fr) minmax(0, 1.2fr);
+      gap: 18px;
+      margin-bottom: 18px;
+    }
+
+    @media (max-width: 900px) {
+      .grid {
+        grid-template-columns: minmax(0, 1fr);
+      }
+      header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
+
+    .card {
+      background: radial-gradient(circle at 0 0, #111827 0, #020617 70%);
+      border-radius: var(--radius-xl);
+      border: 1px solid rgba(148, 163, 184, 0.15);
+      padding: 18px 18px 20px;
+      box-shadow: 0 22px 45px rgba(15, 23, 42, 0.75);
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+      gap: 6px;
+    }
+
+    .card-title {
+      font-size: 15px;
+      font-weight: 600;
+    }
+
+    .card-subtitle {
+      font-size: 12px;
+      color: var(--text-sub);
+    }
+
     label {
+      font-size: 12px;
+      color: var(--text-sub);
       display: block;
-      font-size: 14px;
       margin-bottom: 4px;
     }
-    input, textarea {
-      width: 100%;
-      padding: 8px 10px;
-      border-radius: 8px;
-      border: 1px solid #4b5563;
-      background: #020617;
-      color: #e5e7eb;
-      box-sizing: border-box;
-      font-size: 14px;
-      margin-bottom: 10px;
-    }
+
+    input,
     textarea {
-      min-height: 80px;
+      width: 100%;
+      font: inherit;
+      color: var(--text-main);
+      background: #020617;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      padding: 9px 11px;
+      outline: none;
+      transition: border-color 0.12s ease, box-shadow 0.12s ease, background 0.12s ease;
+    }
+
+    input:focus,
+    textarea:focus {
+      border-color: rgba(129, 140, 248, 0.9);
+      box-shadow: 0 0 0 1px rgba(129, 140, 248, 0.6);
+      background: #020617;
+    }
+
+    textarea {
       resize: vertical;
+      min-height: 120px;
     }
-    button {
-      padding: 8px 14px;
-      border-radius: 999px;
-      border: none;
-      cursor: pointer;
-      font-size: 14px;
-      font-weight: 600;
-      margin-right: 8px;
-      margin-top: 4px;
+
+    .input-row {
+      margin-bottom: 12px;
     }
-    .btn-primary {
-      background: #3b82f6;
-      color: white;
-    }
-    .btn-primary:disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
-    }
-    .btn-secondary {
-      background: #111827;
-      color: #e5e7eb;
-      border: 1px solid #4b5563;
-    }
-    .row {
+
+    .btn-row {
       display: flex;
-      gap: 16px;
+      gap: 10px;
+      margin-top: 4px;
       flex-wrap: wrap;
     }
-    .col {
-      flex: 1;
-      min-width: 260px;
+
+    button {
+      font: inherit;
+      border-radius: 999px;
+      border: none;
+      padding: 7px 16px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 13px;
+      transition: transform 0.1s ease, box-shadow 0.1s ease, background 0.1s ease;
     }
+
+    button:active {
+      transform: translateY(1px);
+      box-shadow: none;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #4f46e5, #06b6d4);
+      color: white;
+      box-shadow: 0 14px 30px rgba(56, 189, 248, 0.45);
+    }
+
+    .btn-outline {
+      background: transparent;
+      color: var(--text-sub);
+      border: 1px solid var(--border);
+    }
+
+    .btn-danger {
+      background: rgba(248, 113, 113, 0.08);
+      color: #fecaca;
+      border: 1px solid rgba(248, 113, 113, 0.5);
+    }
+
+    .btn-sm {
+      padding: 5px 12px;
+      font-size: 12px;
+    }
+
+    .btn-disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+      box-shadow: none;
+    }
+
+    .status-line {
+      font-size: 12px;
+      color: var(--text-sub);
+      margin-top: 6px;
+    }
+
+    .status-badges {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      margin-top: 2px;
+    }
+
     .badge {
-      display: inline-block;
+      font-size: 11px;
       padding: 2px 8px;
       border-radius: 999px;
-      font-size: 12px;
-      margin-right: 6px;
+      border: 1px solid var(--border);
+      background: rgba(15, 23, 42, 0.85);
+      color: var(--text-sub);
     }
-    .badge-green {
-      background: #065f46;
+
+    .badge-success {
+      border-color: rgba(34, 197, 94, 0.6);
       color: #bbf7d0;
+      background: rgba(22, 163, 74, 0.14);
     }
-    .badge-red {
-      background: #7f1d1d;
+
+    .badge-danger {
+      border-color: rgba(248, 113, 113, 0.7);
+      color: #fecaca;
+      background: rgba(127, 29, 29, 0.4);
+    }
+
+    .badge-info {
+      border-color: rgba(59, 130, 246, 0.6);
+      color: #bfdbfe;
+      background: rgba(37, 99, 235, 0.16);
+    }
+
+    .pill {
+      font-size: 11px;
+      padding: 2px 8px;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.7);
+      color: var(--text-sub);
+      background: rgba(15, 23, 42, 0.8);
+    }
+
+    .muted {
+      color: var(--text-sub);
+      font-size: 12px;
+    }
+
+    .result-box {
+      margin-top: 8px;
+      padding: 10px;
+      border-radius: 10px;
+      background: #020617;
+      border: 1px dashed rgba(148, 163, 184, 0.4);
+      font-size: 12px;
+      max-height: 180px;
+      overflow: auto;
+      white-space: pre-wrap;
+      word-break: break-all;
+    }
+
+    .alert {
+      margin-top: 6px;
+      font-size: 12px;
+      padding: 8px 10px;
+      border-radius: 10px;
+      background: rgba(15, 23, 42, 0.95);
+      border-left: 3px solid rgba(248, 113, 113, 0.9);
       color: #fecaca;
     }
-    .badge-yellow {
-      background: #78350f;
-      color: #fef3c7;
+
+    footer {
+      margin-top: 16px;
+      font-size: 11px;
+      color: var(--text-sub);
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 8px;
     }
-    .log {
-      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-      font-size: 13px;
-      white-space: pre-wrap;
+
+    .link {
+      color: #a5b4fc;
     }
-    .status-ok { color: #22c55e; }
-    .status-error { color: #f97316; }
-    .status-bad { color: #f97316; }
   </style>
 </head>
 <body>
-  <div class="container">
-    <h1>试用/付费系统测试面板</h1>
-    <p style="font-size:13px;color:#9ca3af;">
-      用这页就可以测试：注册 → 登录 → 调用业务接口 → 看试用次数/付费状态。<br/>
-      默认后端地址是 <code>http://localhost:8000</code>，如果你部署到服务器记得改。
-    </p>
-
-    <!-- 后端配置 -->
-    <div class="card">
-      <h2>① 后端配置</h2>
-      <label for="baseUrl">后端 Base URL（不要带 / 结尾）</label>
-      <input id="baseUrl" value="http://localhost:8000" />
-      <button class="btn-secondary" onclick="saveBaseUrl()">保存地址</button>
-      <span id="baseUrlStatus" style="font-size:12px;color:#9ca3af;margin-left:8px;"></span>
-    </div>
-
-    <!-- 登录区域 -->
-    <div class="card">
-      <h2>② 登录/获取 Token</h2>
-      <div class="row">
-        <div class="col">
-          <label for="email">邮箱</label>
-          <input id="email" placeholder="test@example.com" />
-
-          <label for="password">密码</label>
-          <input id="password" type="password" placeholder="******" />
-
-          <button class="btn-primary" onclick="login()">登录</button>
-          <button class="btn-secondary" onclick="logout()">退出（清除token）</button>
-
-          <p id="loginStatus" style="font-size:13px;margin-top:6px;"></p>
+  <div class="page">
+    <header>
+      <div class="logo">
+        <div class="logo-mark"></div>
+        <div>
+          <div class="logo-text-main">NovaEdge · Sora 服务</div>
+          <div class="logo-text-sub">试用 / 付费统一控制台</div>
         </div>
-        <div class="col">
-          <label>当前用户状态</label>
-          <div id="userStatus" style="font-size:13px;color:#9ca3af;">
-            尚未登录。
+      </div>
+      <div class="env-pill">
+        API: <span id="apiBaseLabel">https://api.novaedge.vip</span>
+      </div>
+    </header>
+
+    <!-- 上半部分：左侧登录 / 注册，右侧生成接口 -->
+    <div class="grid">
+      <!-- 登录 / 注册卡片 -->
+      <section class="card">
+        <div class="card-header">
+          <div>
+            <div class="card-title">① 登录 / 注册</div>
+            <div class="card-subtitle">登录后才能调用生成接口</div>
           </div>
+          <button class="btn-sm btn-outline" onclick="openApiBasePrompt()">修改 API 地址</button>
         </div>
-      </div>
+
+        <div class="input-row">
+          <label>邮箱</label>
+          <input type="email" id="emailInput" placeholder="you@example.com" />
+        </div>
+
+        <div class="input-row">
+          <label>密码</label>
+          <input type="password" id="passwordInput" placeholder="至少 6 位密码" />
+        </div>
+
+        <div class="btn-row">
+          <button class="btn-primary" onclick="login()" id="loginBtn">登录</button>
+          <button class="btn-outline" onclick="registerUser()" id="registerBtn">注册新用户</button>
+          <button class="btn-outline btn-sm" onclick="logout()" id="logoutBtn">退出（清除 token）</button>
+        </div>
+
+        <div class="status-line">
+          当前用户：
+          <span id="currentUserEmail">尚未登录</span>
+        </div>
+        <div class="status-badges">
+          <span class="badge" id="badgeLoginState">未登录</span>
+          <span class="badge" id="badgePaid">付费状态未知</span>
+          <span class="badge" id="badgeTrial">试用次数未知</span>
+        </div>
+
+        <div class="alert" id="authMessage" style="display:none;"></div>
+      </section>
+
+      <!-- 业务生成卡片 -->
+      <section class="card">
+        <div class="card-header">
+          <div>
+            <div class="card-title">② 生成业务接口（/api/generate）</div>
+            <div class="card-subtitle">这里放你真正要卖给用户的能力</div>
+          </div>
+          <span class="pill">未登录时无法调用</span>
+        </div>
+
+        <div class="input-row">
+          <label>请求体 JSON（根据后端需要构造）</label>
+          <textarea id="generateBodyInput" placeholder='例如：{"prompt": "帮我生成一段关于小狗的搞笑视频脚本"}'></textarea>
+        </div>
+
+        <div class="btn-row">
+          <button class="btn-primary" onclick="callGenerate()" id="generateBtn">调用 /api/generate</button>
+        </div>
+
+        <div class="muted">提示：当返回 403 时，通常表示试用次数已用完。</div>
+
+        <div class="result-box" id="generateResultBox">暂未调用。</div>
+      </section>
     </div>
 
-    <!-- 业务调用 -->
-    <div class="card">
-      <h2>③ 测试业务接口（/api/generate）</h2>
-      <div class="row">
-        <div class="col">
-          <label for="payload">请求体（JSON，可按你后端的需求改）。默认：<code>{}</code></label>
-          <textarea id="payload">{}</textarea>
-          <button class="btn-primary" id="btnCall" onclick="callGenerate()" disabled>调用 /api/generate</button>
-          <p style="font-size:12px;color:#9ca3af;margin-top:4px;">
-            提示：未登录或没有 token 时按钮会禁用。返回 403 时，说明试用次数用完。
-          </p>
-        </div>
-        <div class="col">
-          <label>调用结果</label>
-          <div id="result" class="log">暂无调用。</div>
+    <!-- 下半部分：试用用完提示 / 支付说明 -->
+    <section class="card">
+      <div class="card-header">
+        <div>
+          <div class="card-title">③ 试用用完后的提示区（可以在这里放二维码）</div>
+          <div class="card-subtitle">当 /api/generate 返回 403 时，会把提示信息显示在这里</div>
         </div>
       </div>
-    </div>
 
-    <!-- 提示区：403 时给用户展示“去扫码付费” -->
-    <div class="card">
-      <h2>④ 试用用完后的提示（你可以在这里放微信收款码）</h2>
-      <p id="payHint" style="font-size:13px;color:#9ca3af;">
-        当接口返回 403 时，这里会显示提示信息，你可以替换成自己的文案和二维码图片。
-      </p>
-      <!-- 示例：你可以把二维码图片路径改成自己的 -->
-      <!-- <img src="./wechat_qr.png" alt="微信收款码" style="max-width:200px;border-radius:12px;border:1px solid #4b5563;" /> -->
-    </div>
+      <div id="trialInfoBox" class="muted">
+        当前尚未触发 403。这里可以写上：
+        <br />· 试用额度介绍（例如：每个账号可免费调用 2 次）
+        <br />· 付费版本说明（价格 / 有效期）
+        <br />· 微信二维码 / 联系方式（你可以放图片或者链接）
+      </div>
+    </section>
+
+    <footer>
+      <span>NovaEdge · 内测版控制台</span>
+      <span>后端：FastAPI · Cloudflare Tunnel &amp; Pages 部署</span>
+    </footer>
   </div>
 
   <script>
-    let accessToken = null;
+    // === 配置区域 ===
+    const API_BASE_KEY = "novaedge_api_base";
+    const TOKEN_KEY = "novaedge_token";
+    const USER_EMAIL_KEY = "novaedge_user_email";
+    const USER_PAID_KEY = "novaedge_user_paid";
+    const USER_TRIAL_LEFT_KEY = "novaedge_user_trial_left";
 
-    function getBaseUrl() {
-      return document.getElementById("baseUrl").value.trim().replace(/\/+$/, "");
+    function getApiBase() {
+      return localStorage.getItem(API_BASE_KEY) || "https://api.novaedge.vip";
     }
 
-    function saveBaseUrl() {
-      const url = getBaseUrl();
-      localStorage.setItem("baseUrl", url);
-      document.getElementById("baseUrlStatus").innerText = "已保存：" + url;
+    function setApiBase(url) {
+      localStorage.setItem(API_BASE_KEY, url);
+      document.getElementById("apiBaseLabel").textContent = url;
     }
 
-    function loadBaseUrl() {
-      const saved = localStorage.getItem("baseUrl");
-      if (saved) {
-        document.getElementById("baseUrl").value = saved;
-        document.getElementById("baseUrlStatus").innerText = "已加载：" + saved;
+    function openApiBasePrompt() {
+      const current = getApiBase();
+      const v = prompt("请输入后端 API Base URL（不要以 / 结尾）:", current);
+      if (v && v.trim()) {
+        setApiBase(v.trim());
       }
     }
 
-    function setToken(token) {
-      accessToken = token;
-      if (token) {
-        localStorage.setItem("accessToken", token);
-        document.getElementById("btnCall").disabled = false;
+    // === 初始化 ===
+    function initFromStorage() {
+      setApiBase(getApiBase());
+
+      const token = localStorage.getItem(TOKEN_KEY);
+      const email = localStorage.getItem(USER_EMAIL_KEY);
+      const paid = localStorage.getItem(USER_PAID_KEY);
+      const trialLeft = localStorage.getItem(USER_TRIAL_LEFT_KEY);
+
+      if (token && email) {
+        updateLoginState(true, email);
+        updatePaidBadge(paid);
+        updateTrialBadge(trialLeft);
       } else {
-        localStorage.removeItem("accessToken");
-        document.getElementById("btnCall").disabled = true;
+        updateLoginState(false, null);
       }
     }
 
-    function loadToken() {
-      const t = localStorage.getItem("accessToken");
-      if (t) {
-        accessToken = t;
-        document.getElementById("btnCall").disabled = false;
-        document.getElementById("loginStatus").innerHTML =
-          '<span class="status-ok">已从本地加载 token。</span>';
+    window.addEventListener("load", initFromStorage);
+
+    // === UI 更新辅助函数 ===
+    function updateLoginState(isLoggedIn, email) {
+      const emailSpan = document.getElementById("currentUserEmail");
+      const loginBadge = document.getElementById("badgeLoginState");
+      const generateBtn = document.getElementById("generateBtn");
+      const logoutBtn = document.getElementById("logoutBtn");
+
+      if (isLoggedIn) {
+        emailSpan.textContent = email || "已登录";
+        loginBadge.textContent = "已登录";
+        loginBadge.classList.remove("badge-danger");
+        loginBadge.classList.add("badge-success");
+        generateBtn.classList.remove("btn-disabled");
+        generateBtn.disabled = false;
+        logoutBtn.disabled = false;
+      } else {
+        emailSpan.textContent = "尚未登录";
+        loginBadge.textContent = "未登录";
+        loginBadge.classList.remove("badge-success");
+        loginBadge.classList.add("badge-danger");
+        generateBtn.classList.add("btn-disabled");
+        generateBtn.disabled = true;
+        logoutBtn.disabled = true;
       }
     }
 
+    function updatePaidBadge(isPaid) {
+      const badge = document.getElementById("badgePaid");
+      if (isPaid === "true" || isPaid === true) {
+        badge.textContent = "已付费";
+        badge.classList.remove("badge-danger");
+        badge.classList.add("badge-success");
+      } else if (isPaid === "false" || isPaid === false) {
+        badge.textContent = "未付费";
+        badge.classList.remove("badge-success");
+        badge.classList.add("badge-danger");
+      } else {
+        badge.textContent = "付费状态未知";
+        badge.classList.remove("badge-success", "badge-danger");
+      }
+    }
+
+    function updateTrialBadge(trialLeft) {
+      const badge = document.getElementById("badgeTrial");
+      if (trialLeft === null || trialLeft === undefined || trialLeft === "") {
+        badge.textContent = "试用次数未知";
+        badge.classList.remove("badge-success", "badge-danger");
+        return;
+      }
+      const n = Number(trialLeft);
+      if (Number.isNaN(n)) {
+        badge.textContent = "试用次数未知";
+        return;
+      }
+      badge.textContent = `剩余试用：${n} 次`;
+      badge.classList.remove("badge-danger");
+      badge.classList.add(n > 0 ? "badge-success" : "badge-danger");
+    }
+
+    function setAuthMessage(msg, isError = false) {
+      const box = document.getElementById("authMessage");
+      if (!msg) {
+        box.style.display = "none";
+        return;
+      }
+      box.textContent = msg;
+      box.style.display = "block";
+      box.style.borderLeftColor = isError
+        ? "rgba(248,113,113,0.9)"
+        : "rgba(34,197,94,0.9)";
+    }
+
+    // === 登录 / 注册 / 退出 ===
     async function login() {
-      const email = document.getElementById("email").value.trim();
-      const pwd = document.getElementById("password").value.trim();
-      const baseUrl = getBaseUrl();
+      const email = document.getElementById("emailInput").value.trim();
+      const password = document.getElementById("passwordInput").value;
 
-      if (!email || !pwd) {
-        document.getElementById("loginStatus").innerHTML =
-          '<span class="status-bad">请填写邮箱和密码。</span>';
+      if (!email || !password) {
+        setAuthMessage("请填写邮箱和密码。", true);
         return;
       }
 
-      document.getElementById("loginStatus").innerHTML = "登录中…";
-
       try {
-        const res = await fetch(baseUrl + "/auth/login", {
+        setAuthMessage("正在登录中…");
+        const res = await fetch(getApiBase() + "/auth/login", {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({ email: email, password: pwd })
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email, password })
         });
+
+        if (!res.ok) {
+          const text = await res.text();
+          setAuthMessage("登录失败：" + text, true);
+          updateLoginState(false, null);
+          return;
+        }
 
         const data = await res.json();
 
-        if (!res.ok) {
-          document.getElementById("loginStatus").innerHTML =
-            '<span class="status-error">登录失败：' + (data.detail || res.status) + "</span>";
-          setToken(null);
-          document.getElementById("userStatus").innerHTML = "尚未登录。";
-          return;
+        // 这里假设后端返回结构：
+        // {
+        //   "access_token": "...",
+        //   "token_type": "bearer",
+        //   "user": {
+        //       "email": "...",
+        //       "is_paid": false,
+        //       "trial_left": 2
+        //   }
+        // }
+        const token = data.access_token;
+        const user = data.user || {};
+        localStorage.setItem(TOKEN_KEY, token);
+        localStorage.setItem(USER_EMAIL_KEY, user.email || email);
+        if (user.is_paid !== undefined) {
+          localStorage.setItem(USER_PAID_KEY, String(user.is_paid));
+        }
+        if (user.trial_left !== undefined) {
+          localStorage.setItem(USER_TRIAL_LEFT_KEY, String(user.trial_left));
         }
 
-        if (!data.access_token) {
-          document.getElementById("loginStatus").innerHTML =
-            '<span class="status-error">登录成功但没有返回 access_token，请检查后端。</span>';
-          return;
-        }
-
-        setToken(data.access_token);
-
-        document.getElementById("loginStatus").innerHTML =
-          '<span class="status-ok">登录成功，token 已保存。</span>';
-
-        renderUserStatus({
-          email: email,
-          trial_left: data.trial_left,
-          is_paid: data.is_paid,
-          manual_authorized: data.manual_authorized
-        });
+        updateLoginState(true, user.email || email);
+        updatePaidBadge(user.is_paid);
+        updateTrialBadge(user.trial_left);
+        setAuthMessage("登录成功，token 已保存。", false);
       } catch (err) {
-        document.getElementById("loginStatus").innerHTML =
-          '<span class="status-error">请求异常：' + err.message + "</span>";
+        console.error(err);
+        setAuthMessage("登录异常：" + err.message, true);
+      }
+    }
+
+    async function registerUser() {
+      const email = document.getElementById("emailInput").value.trim();
+      const password = document.getElementById("passwordInput").value;
+
+      if (!email || !password) {
+        setAuthMessage("注册前请先填写邮箱和密码。", true);
+        return;
+      }
+
+      try {
+        setAuthMessage("正在注册中…");
+        const res = await fetch(getApiBase() + "/auth/register", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            email,
+            password
+          })
+        });
+
+        if (!res.ok) {
+          const text = await res.text();
+          setAuthMessage("注册失败：" + text, true);
+          return;
+        }
+
+        setAuthMessage("注册成功，请继续点击登录。", false);
+      } catch (err) {
+        console.error(err);
+        setAuthMessage("注册异常：" + err.message, true);
       }
     }
 
     function logout() {
-      setToken(null);
-      document.getElementById("loginStatus").innerHTML =
-        '<span class="status-bad">已清除 token。</span>';
-      document.getElementById("userStatus").innerHTML = "尚未登录。";
+      localStorage.removeItem(TOKEN_KEY);
+      localStorage.removeItem(USER_EMAIL_KEY);
+      localStorage.removeItem(USER_PAID_KEY);
+      localStorage.removeItem(USER_TRIAL_LEFT_KEY);
+      updateLoginState(false, null);
+      updatePaidBadge(null);
+      updateTrialBadge(null);
+      setAuthMessage("已退出登录，本地 token 已清除。", false);
     }
 
-    function renderUserStatus(info) {
-      const paidBadge = info.is_paid
-        ? '<span class="badge badge-green">已付费</span>'
-        : '<span class="badge badge-red">未付费</span>';
-
-      const manualBadge = info.manual_authorized
-        ? '<span class="badge badge-green">已人工授权</span>'
-        : "";
-
-      const trialBadge =
-        info.trial_left > 0
-          ? '<span class="badge badge-yellow">剩余试用：' + info.trial_left + ' 次</span>'
-          : '<span class="badge badge-red">试用次数已用完</span>';
-
-      document.getElementById("userStatus").innerHTML =
-        '当前用户：<b>' + (info.email || "未知邮箱") + '</b><br>' +
-        paidBadge + manualBadge + trialBadge;
-    }
-
+    // === 调用业务接口 /api/generate ===
     async function callGenerate() {
-      const baseUrl = getBaseUrl();
-      if (!accessToken) {
-        document.getElementById("result").innerText = "请先登录获取 token。";
+      const token = localStorage.getItem(TOKEN_KEY);
+      if (!token) {
+        setAuthMessage("请先登录后再调用生成接口。", true);
         return;
       }
 
-      let bodyText = document.getElementById("payload").value;
-      let jsonBody = {};
-      if (bodyText.trim()) {
-        try {
-          jsonBody = JSON.parse(bodyText);
-        } catch (e) {
-          document.getElementById("result").innerText = "请求体 JSON 不合法：" + e.message;
-          return;
-        }
+      let bodyText = document.getElementById("generateBodyInput").value.trim();
+      if (!bodyText) {
+        // 默认一个简单请求体，避免用户不知道写什么
+        bodyText = JSON.stringify({ prompt: "hello from novaedge-ui" }, null, 2);
+        document.getElementById("generateBodyInput").value = bodyText;
       }
 
-      document.getElementById("result").innerText = "调用中…";
+      let bodyJson;
+      try {
+        bodyJson = JSON.parse(bodyText);
+      } catch (err) {
+        alert("请求体不是合法 JSON，请检查。");
+        return;
+      }
+
+      const resultBox = document.getElementById("generateResultBox");
+      resultBox.textContent = "调用中…";
 
       try {
-        const res = await fetch(baseUrl + "/api/generate", {
+        const res = await fetch(getApiBase() + "/api/generate", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            "Authorization": "Bearer " + accessToken
+            Authorization: "Bearer " + token
           },
-          body: JSON.stringify(jsonBody)
+          body: JSON.stringify(bodyJson)
         });
 
         const text = await res.text();
-        let data;
-        try {
-          data = JSON.parse(text);
-        } catch (e) {
-          data = text;
-        }
+        resultBox.textContent = text;
 
         if (res.status === 403) {
-          document.getElementById("result").innerText =
-            "⚠ 403 Forbidden\n" +
-            JSON.stringify(data, null, 2);
-          document.getElementById("payHint").innerText =
-            "接口返回 403：试用次数可能已用完。请让用户扫码你的微信收款码并联系你开通账号。";
-        } else if (!res.ok) {
-          document.getElementById("result").innerText =
-            "❌ 调用失败，HTTP " + res.status + "\n" +
-            JSON.stringify(data, null, 2);
-        } else {
-          document.getElementById("result").innerText =
-            "✅ 调用成功\n" +
-            JSON.stringify(data, null, 2);
+          // 试用次数用完
+          document.getElementById("trialInfoBox").innerHTML =
+            "后端返回 403，说明试用次数可能已用完。<br>" +
+            "你可以在这里放：微信收款码、续费说明、联系客服方式等。";
+        }
 
-          // 如果后端返回 trial_left / is_paid，就顺便更新用户状态
-          if (data && typeof data === "object" &&
-              ("trial_left" in data || "is_paid" in data)) {
-            const email = document.getElementById("email").value.trim();
-            renderUserStatus({
-              email: email,
-              trial_left: data.trial_left ?? 0,
-              is_paid: data.is_paid ?? false,
-              manual_authorized: data.manual_authorized ?? false
-            });
+        // 如果后端在返回体里带了最新 trial_left / is_paid，可以在这里解析更新：
+        try {
+          const data = JSON.parse(text);
+          if (data.user) {
+            if (data.user.trial_left !== undefined) {
+              localStorage.setItem(
+                USER_TRIAL_LEFT_KEY,
+                String(data.user.trial_left)
+              );
+              updateTrialBadge(data.user.trial_left);
+            }
+            if (data.user.is_paid !== undefined) {
+              localStorage.setItem(USER_PAID_KEY, String(data.user.is_paid));
+              updatePaidBadge(data.user.is_paid);
+            }
           }
+        } catch (_) {
+          // 返回不是 JSON 就忽略
         }
       } catch (err) {
-        document.getElementById("result").innerText = "请求异常：" + err.message;
+        console.error(err);
+        resultBox.textContent = "调用异常：" + err.message;
       }
-    }
-
-    // 初始化：加载已保存的 baseUrl 和 token
-    loadBaseUrl();
-    loadToken();
-    if (!accessToken) {
-      document.getElementById("btnCall").disabled = true;
     }
   </script>
 </body>
